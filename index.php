@@ -4,9 +4,18 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
-// Load environment variables
-$dotenv = Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Load environment variables if a .env file exists; otherwise rely on the host environment
+$envPath = __DIR__ . '/.env';
+if (file_exists($envPath) && is_readable($envPath)) {
+    $dotenv = Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+} else {
+    // No .env on filesystem (e.g. Railway, Vercel, other hosts). Rely on environment variables.
+    // Log a message in error log to help debugging deployments.
+    if (php_sapi_name() !== 'cli') {
+        error_log("[info] No .env file found at $envPath; relying on environment variables.");
+    }
+}
 
 // Initialize Twig
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/templates');
