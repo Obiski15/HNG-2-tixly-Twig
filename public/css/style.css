@@ -117,9 +117,15 @@
   font-family: var(--font-family-sans);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  /* Force bottom-right positioning for entire lifecycle (show and hide) */
+  position: fixed !important;
+  bottom: 16px !important;
+  right: 16px !important;
+  top: auto !important;
+  left: auto !important;
 }
 
-/* Force bottom-right positioning */
+/* Keep positioning during active state */
 .toastify.on {
   position: fixed !important;
   bottom: 16px !important;

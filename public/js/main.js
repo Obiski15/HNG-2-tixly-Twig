@@ -115,12 +115,20 @@ window.toast = {
 
 // Initialize app
 
-// API Configuration - prefer server-injected value (set in Twig). If absent, warn and use a local fallback.
+const VITE_API_BASE =
+  typeof import.meta !== "undefined" && import.meta.env
+    ? import.meta.env.VITE_API_BASE_URL
+    : undefined;
+
 if (!window.API_BASE_URL) {
-  console.warn(
-    "window.API_BASE_URL not provided by server. Falling back to http://localhost:4000"
-  );
-  window.API_BASE_URL = "http://localhost:4000";
+  if (VITE_API_BASE) {
+    window.API_BASE_URL = VITE_API_BASE;
+  } else {
+    console.warn(
+      "API base URL not provided by server or Vite. Falling back to http://localhost:4000"
+    );
+    window.API_BASE_URL = "http://localhost:4000";
+  }
 }
 
 // Utility function to logout (using authService)

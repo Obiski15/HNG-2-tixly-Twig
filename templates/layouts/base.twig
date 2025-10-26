@@ -7,14 +7,13 @@
     <title>{% block title %}Tixly{% endblock %}</title>
     <link rel="icon" type="image/svg+xml" href="/icon.svg">
     <link rel="stylesheet" href="/dist/css/styles.css">
+    <script>
+        // Inject API_BASE_URL from server into window for JavaScript services
+        window.API_BASE_URL = "{{ API_BASE_URL }}";
+    </script>
 </head>
 <body>
     {% block content %}{% endblock %}
-    
-    {# Inject API base URL from server-side env into the page so client JS can use it #}
-    <script>
-        window.API_BASE_URL = "{{ API_BASE_URL|e('js') }}";
-    </script>
 
     <script type="module" src="/dist/js/main.js"></script>
     {% block scripts %}{% endblock %}

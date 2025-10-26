@@ -19,18 +19,25 @@ if (file_exists($envPath) && is_readable($envPath)) {
 
 // Initialize Twig
 $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/templates');
+
+// Get Twig configuration from environment with proper fallbacks
+$twigCache = getenv('TWIG_CACHE') ?: ($_ENV['TWIG_CACHE'] ?? 'false');
+$twigDebug = getenv('TWIG_DEBUG') ?: ($_ENV['TWIG_DEBUG'] ?? 'false');
+
 $twig = new \Twig\Environment($loader, [
-    'cache' => $_ENV['TWIG_CACHE'] === 'true' ? __DIR__ . '/cache' : false,
-    'debug' => $_ENV['TWIG_DEBUG'] === 'true',
+    'cache' => ($twigCache === 'true') ? __DIR__ . '/cache' : false,
+    'debug' => ($twigDebug === 'true'),
 ]);
 
 // Add debug extension if enabled
-if ($_ENV['TWIG_DEBUG'] === 'true') {
+if ($twigDebug === 'true') {
     $twig->addExtension(new \Twig\Extension\DebugExtension());
 }
 
-// Inject important environment values into Twig globals so front-end can read them
-$twig->addGlobal('API_BASE_URL', isset($_ENV['API_BASE_URL']) ? trim($_ENV['API_BASE_URL'], ' "') : 'http://localhost:4000');
+// Determine API base URL from environment so server can inject a runtime value
+// (use VITE_API_BASE_URL if set by host, otherwise fallback to API_BASE_URL or localhost)
+$apiBase = getenv('VITE_API_BASE_URL') ?: getenv('API_BASE_URL') ?: ($_ENV['VITE_API_BASE_URL'] ?? ($_ENV['API_BASE_URL'] ?? 'http://localhost:4000'));
+$twig->addGlobal('API_BASE_URL', trim($apiBase, "\"' "));
 
 // Simple router
 $request = $_SERVER['REQUEST_URI'];
@@ -55,11 +62,11 @@ try {
             break;
         
         case '/login':
-            echo $twig->render('pages/login.twig');
+            echo $twig->render('pages/login.twig', ['showFooter' => false]);
             break;
         
         case '/signup':
-            echo $twig->render('pages/signup.twig');
+            echo $twig->render('pages/signup.twig', ['showFooter' => false]);
             break;
         
         case '/dashboard':

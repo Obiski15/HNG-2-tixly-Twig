@@ -1,7 +1,10 @@
 // Authentication Service
 class AuthService {
   constructor() {
-    this.baseURL = window.API_BASE_URL || "http://localhost:4000";
+    // Prefer Vite-injected env var, then server-injected global, then fallback.
+    this.baseURL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_BASE_URL)
+      || window.API_BASE_URL
+      || "http://localhost:4000";
     this.tokenKey = "token";
     this.userKey = "user";
   }
