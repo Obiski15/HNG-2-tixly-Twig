@@ -1,0 +1,51 @@
+{# Alert Dialog Component #}
+{% set id = id|default('alert-dialog') %}
+{% set title = title|default('Are you sure?') %}
+{% set description = description|default('') %}
+{% set cancelText = cancelText|default('Cancel') %}
+{% set actionText = actionText|default('Continue') %}
+{% set actionVariant = actionVariant|default('default') %}
+
+<div id="{{ id }}" class="hidden fixed inset-0 z-50">
+    {# Overlay #}
+    <div data-alert-overlay class="fixed inset-0 bg-background/80 backdrop-blur-sm"></div>
+    
+    {# Content #}
+    <div class="fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-card p-6 shadow-lg duration-200 sm:rounded-lg">
+        {# Header #}
+        <div class="flex flex-col space-y-2 text-center sm:text-left">
+            <h2 class="text-lg font-semibold">
+                {{ title }}
+            </h2>
+            {% if description %}
+            <p class="text-sm text-muted-foreground">
+                {{ description }}
+            </p>
+            {% endif %}
+        </div>
+        
+        {# Footer #}
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 mt-4">
+            <button
+                data-alert-cancel
+                type="button"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2"
+            >
+                {{ cancelText }}
+            </button>
+            <button
+                data-alert-action
+                type="button"
+                class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed 
+                {% if actionVariant == 'destructive' %}
+                    bg-destructive text-destructive-foreground hover:bg-destructive/90
+                {% else %}
+                    bg-primary text-primary-foreground hover:bg-primary/90
+                {% endif %}
+                h-10 px-4 py-2"
+            >
+                {{ actionText }}
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Modern ticket management made simple and efficient.">
+    <title>{% block title %}Tixly{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
+    <link rel="stylesheet" href="/dist/css/styles.css">
+</head>
+<body>
+    {% block content %}{% endblock %}
+    
+    {# Inject API base URL from server-side env into the page so client JS can use it #}
+    <script>
+        window.API_BASE_URL = "{{ API_BASE_URL|e('js') }}";
+    </script>
+
+    <script type="module" src="/dist/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

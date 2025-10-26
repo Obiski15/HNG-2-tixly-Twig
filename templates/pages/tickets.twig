@@ -1,0 +1,172 @@
+{% extends "layouts/layout.twig" %}
+
+{% block title %}Tickets - Tixly{% endblock %}
+
+{% set showNav = false %}
+{% set showFooter = false %}
+
+{% block main %}
+{# Loading state - shown until auth check completes #}
+<div id="auth-loading" class="flex min-h-screen items-center justify-center">
+    <div class="text-center">
+        <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+        <p class="text-muted-foreground mt-4 text-sm">Loading...</p>
+    </div>
+</div>
+
+<div id="tickets-content" class="bg-muted/30 min-h-screen" style="display: none;">
+    {# Header #}
+    <header class="bg-card border-border border-b">
+        <div class="container-app flex items-center justify-between py-4">
+            <div class="flex items-center gap-4">
+                <a href="/dashboard" class="inline-flex items-center justify-center rounded-md hover:bg-accent h-10 w-10 transition-colors">
+                    {% include 'components/icons/arrow-left.twig' with { size: 20 } %}
+                </a>
+                <div>
+                    <h1 class="text-2xl font-bold">Ticket Management</h1>
+                    <p class="text-muted-foreground text-sm">
+                        <span id="tickets-count">0</span> total tickets
+                    </p>
+                </div>
+            </div>
+            <button onclick="openCreateDialog()" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors">
+                {% include 'components/icons/plus.twig' with { size: 16, class: 'mr-2' } %}
+                Create Ticket
+            </button>
+        </div>
+    </header>
+
+    <div class="container-app py-8">
+        <div id="tickets-list">
+            <div class="text-center py-12 text-muted-foreground">
+                Loading tickets...
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Create Ticket Dialog #}
+{% include 'components/ui/dialog.twig' with {
+    'id': 'create-ticket-dialog',
+    'title': 'Create New Ticket',
+    'description': 'Fill in the details to create a new ticket',
+    'content': '
+        <form id="create-ticket-form" class="space-y-4">
+            <div class="space-y-2">
+                <div>
+                    <label for="title" class="text-sm font-medium">Title</label>
+                </div>
+                <input type="text" id="title" name="title" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter ticket title" required />
+                <span class="text-sm text-destructive" id="title-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="description" class="text-sm font-medium">Description</label>
+                </div>
+                <textarea id="description" name="description" rows="4" class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter ticket description" required></textarea>
+                <span class="text-sm text-destructive" id="description-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="priority" class="text-sm font-medium">Priority</label>
+                </div>
+                <select id="priority" name="priority" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" required>
+                    <option value="">Select priority</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <span class="text-sm text-destructive" id="priority-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="status" class="text-sm font-medium">Status</label>
+                </div>
+                <select id="status" name="status" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" required>
+                    <option value="">Select status</option>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <span class="text-sm text-destructive" id="status-error"></span>
+            </div>
+        </form>
+    ',
+    'footer': '
+        <button data-dialog-close type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Cancel</button>
+        <button type="submit" form="create-ticket-form" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Create Ticket</button>
+    '
+} %}
+
+{# Edit Ticket Dialog #}
+{% include 'components/ui/dialog.twig' with {
+    'id': 'edit-ticket-dialog',
+    'title': 'Edit Ticket',
+    'description': 'Update the ticket details',
+    'content': '
+        <form id="edit-ticket-form" class="space-y-4">
+            <input type="hidden" id="edit-ticket-id" name="id" />
+            <div class="space-y-2">
+                <div>
+                    <label for="edit-title" class="text-sm font-medium">Title</label>
+                </div>
+                <input type="text" id="edit-title" name="title" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter ticket title" required />
+                <span class="text-sm text-destructive" id="edit-title-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="edit-description" class="text-sm font-medium">Description</label>
+                </div>
+                <textarea id="edit-description" name="description" rows="4" class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter ticket description" required></textarea>
+                <span class="text-sm text-destructive" id="edit-description-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="edit-priority" class="text-sm font-medium">Priority</label>
+                </div>
+                <select id="edit-priority" name="priority" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <span class="text-sm text-destructive" id="edit-priority-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="edit-status" class="text-sm font-medium">Status</label>
+                </div>
+                <select id="edit-status" name="status" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" required>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <span class="text-sm text-destructive" id="edit-status-error"></span>
+            </div>
+        </form>
+    ',
+    'footer': '
+        <button data-dialog-close type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Cancel</button>
+        <button type="submit" form="edit-ticket-form" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Update Ticket</button>
+    '
+} %}
+
+{# Delete Ticket Alert Dialog #}
+{% include 'components/ui/alert-dialog.twig' with {
+    'id': 'delete-ticket-alert',
+    'title': 'Delete Ticket',
+    'description': 'Are you sure you want to delete this ticket? This action cannot be undone.',
+    'cancelText': 'Cancel',
+    'actionText': 'Delete',
+    'actionVariant': 'destructive'
+} %}
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="/dist/js/pages/tickets.js"></script>
+{% endblock %}

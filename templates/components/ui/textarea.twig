@@ -1,0 +1,18 @@
+{# Textarea Component #}
+{% set id = id|default('') %}
+{% set name = name|default('') %}
+{% set placeholder = placeholder|default('') %}
+{% set required = required|default(false) %}
+{% set disabled = disabled|default(false) %}
+{% set rows = rows|default(3) %}
+
+<textarea
+    {% if id %}id="{{ id }}"{% endif %}
+    {% if name %}name="{{ name }}"{% endif %}
+    rows="{{ rows }}"
+    class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 {{ class|default('') }}"
+    {% if placeholder %}placeholder="{{ placeholder }}"{% endif %}
+    {% if required %}required{% endif %}
+    {% if disabled %}disabled{% endif %}
+    {{ attributes|default('')|raw }}
+>{{ value|default('') }}</textarea>

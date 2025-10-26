@@ -1,0 +1,10 @@
+{# Label Component #}
+{% set for = for|default('') %}
+
+<label
+    {% if for %}for="{{ for }}"{% endif %}
+    class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 {{ class|default('') }}"
+    {{ attributes|default('')|raw }}
+>
+    {{ content|raw }}
+</label>

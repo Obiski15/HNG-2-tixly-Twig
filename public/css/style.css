@@ -1,0 +1,213 @@
+@import "tailwindcss";
+
+/* Global Styles */
+@theme {
+  --font-family-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, sans-serif;
+
+  --color-background: hsl(0 0% 100%);
+  --color-foreground: hsl(222 47% 11%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222 47% 11%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222 47% 11%);
+  --color-primary: hsl(239 84% 67%);
+  --color-primary-foreground: hsl(0 0% 100%);
+  --color-primary-hover: hsl(239 84% 60%);
+  --color-secondary: hsl(220 13% 95%);
+  --color-secondary-foreground: hsl(222 47% 11%);
+  --color-muted: hsl(220 13% 95%);
+  --color-muted-foreground: hsl(220 9% 46%);
+  --color-accent: hsl(239 84% 67%);
+  --color-accent-foreground: hsl(0 0% 100%);
+  --color-success: hsl(142 71% 45%);
+  --color-success-foreground: hsl(0 0% 100%);
+  --color-warning: hsl(38 92% 50%);
+  --color-warning-foreground: hsl(0 0% 100%);
+  --color-destructive: hsl(0 84% 60%);
+  --color-destructive-foreground: hsl(0 0% 100%);
+  --color-border: hsl(220 13% 91%);
+  --color-input: hsl(220 13% 91%);
+  --color-ring: hsl(239 84% 67%);
+
+  /* Border radius */
+  --radius: 0.75rem;
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 0.25rem);
+
+  /* Custom properties for gradients and effects */
+  --gradient-hero: linear-gradient(
+    135deg,
+    hsl(239 84% 67%) 0%,
+    hsl(250 100% 75%) 100%
+  );
+
+  --gradient-card: linear-gradient(
+    180deg,
+    hsl(0 0% 100%) 0%,
+    hsl(220 13% 98%) 100%
+  );
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground mx-auto max-w-[1440px] min-w-[300px];
+    font-family: var(--font-family-sans);
+  }
+}
+
+@layer utilities {
+  .container-app {
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    max-width: 1440px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .wave-bg {
+    background: radial-gradient(
+        circle at 20% 50%,
+        hsl(239 84% 67% / 0.15) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        circle at 80% 80%,
+        hsl(250 100% 75% / 0.15) 0%,
+        transparent 50%
+      );
+  }
+}
+
+@media (min-width: 640px) {
+  .container-app {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-app {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Toast Styles - Sonner-like appearance */
+.toastify {
+  font-family: var(--font-family-sans);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* Force bottom-right positioning */
+.toastify.on {
+  position: fixed !important;
+  bottom: 16px !important;
+  right: 16px !important;
+  top: auto !important;
+  left: auto !important;
+}
+
+.toast-success::before {
+  content: "✓";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  background: hsl(142 71% 45%);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.toast-error::before {
+  content: "✕";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  background: hsl(0 84% 60%);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.toast-warning::before {
+  content: "⚠";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  background: hsl(38 92% 50%);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.toast-info::before {
+  content: "ℹ";
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  background: hsl(239 84% 67%);
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 12px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* Toast animation */
+@keyframes toast-in-right {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.toastify {
+  animation: toast-in-right 0.3s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}

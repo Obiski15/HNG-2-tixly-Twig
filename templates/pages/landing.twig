@@ -1,0 +1,118 @@
+{% extends "layouts/layout.twig" %}
+
+{% block title %}Welcome - Tixly{% endblock %}
+
+{% block main %}
+{# Hero Section with Gradient and Wavy Background #}
+<section class="gradient-hero relative overflow-hidden py-20 lg:py-32">
+    <div class="container-app relative z-10">
+        <div class="mx-auto max-w-3xl text-center">
+            <h1 class="text-primary-foreground mb-6 text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
+                Streamline Your Ticket Management
+            </h1>
+            <p class="text-primary-foreground/90 mb-8 text-lg leading-relaxed md:text-xl">
+                Track, manage, and resolve support tickets efficiently with
+                Tixly. Built for teams that value clarity and speed.
+            </p>
+            <div class="flex flex-col justify-center gap-4 sm:flex-row">
+                <a href="/signup" class="text-primary bg-white px-8 py-3 text-lg shadow-lg hover:bg-white/90 rounded-md inline-flex items-center justify-center font-medium transition-colors">
+                    Get Started
+                </a>
+                <a href="/login" class="border-white/30 bg-white/10 px-8 py-3 text-lg text-white hover:bg-white/20 rounded-md inline-flex items-center justify-center font-medium transition-colors border">
+                    Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% include 'components/wavy-background.twig' %}
+</section>
+
+{# Features Section #}
+<section class="bg-background py-20">
+    <div class="container-app">
+        <div class="mb-16 text-center">
+            <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+                Everything You Need
+            </h2>
+            <p class="text-muted-foreground mx-auto max-w-2xl text-lg">
+                Powerful features to help your team stay organized and productive
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {# Easy Tracking Card #}
+            <div class="bg-card border-border rounded-lg border shadow-md transition-shadow hover:shadow-lg">
+                <div class="p-6">
+                    <div class="mb-4">
+                        {% include 'components/icons/check-circle-2.twig' with { size: 48, class: 'text-success' } %}
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Easy Tracking</h3>
+                    <p class="text-muted-foreground text-sm">
+                        Monitor all your tickets in one centralized dashboard
+                    </p>
+                </div>
+            </div>
+
+            {# Real-time Updates Card #}
+            <div class="bg-card border-border rounded-lg border shadow-md transition-shadow hover:shadow-lg">
+                <div class="p-6">
+                    <div class="mb-4">
+                        {% include 'components/icons/clock.twig' with { size: 48, class: 'text-warning' } %}
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Real-time Updates</h3>
+                    <p class="text-muted-foreground text-sm">
+                        Stay informed with instant status changes and notifications
+                    </p>
+                </div>
+            </div>
+
+            {# Analytics Card #}
+            <div class="bg-card border-border rounded-lg border shadow-md transition-shadow hover:shadow-lg">
+                <div class="p-6">
+                    <div class="mb-4">
+                        {% include 'components/icons/trending-up.twig' with { size: 48, class: 'text-primary' } %}
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Analytics</h3>
+                    <p class="text-muted-foreground text-sm">
+                        Gain insights with comprehensive ticket statistics
+                    </p>
+                </div>
+            </div>
+
+            {# Team Collaboration Card #}
+            <div class="bg-card border-border rounded-lg border shadow-md transition-shadow hover:shadow-lg">
+                <div class="p-6">
+                    <div class="mb-4">
+                        {% include 'components/icons/users.twig' with { size: 48, class: 'text-accent' } %}
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">Team Collaboration</h3>
+                    <p class="text-muted-foreground text-sm">
+                        Work together seamlessly on ticket resolution
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# CTA Section #}
+<section class="relative overflow-hidden py-20">
+    <div class="container-app relative z-10">
+        <div class="bg-card border-border mx-auto max-w-3xl rounded-lg border shadow-xl">
+            <div class="p-12 text-center">
+                <h2 class="mb-4 text-3xl font-bold md:text-4xl">
+                    Ready to Get Started?
+                </h2>
+                <p class="text-muted-foreground mb-8 text-lg">
+                    Join teams who trust Tixly for their support operations
+                </p>
+                <a href="/signup" class="bg-primary text-primary-foreground px-8 py-3 text-lg rounded-md inline-flex items-center justify-center font-medium hover:bg-primary/90 transition-colors">
+                    Create Your Account
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

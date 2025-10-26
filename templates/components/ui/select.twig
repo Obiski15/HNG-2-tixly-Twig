@@ -1,0 +1,20 @@
+{# Select Component #}
+{% set id = id|default('') %}
+{% set name = name|default('') %}
+{% set required = required|default(false) %}
+{% set disabled = disabled|default(false) %}
+{% set value = value|default('') %}
+
+<select
+    {% if id %}id="{{ id }}"{% endif %}
+    {% if name %}name="{{ name }}"{% endif %}
+    class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 {{ class|default('') }}"
+    {% if required %}required{% endif %}
+    {% if disabled %}disabled{% endif %}
+    {{ attributes|default('')|raw }}
+>
+    {% if placeholder %}
+    <option value="" disabled {% if not value %}selected{% endif %}>{{ placeholder }}</option>
+    {% endif %}
+    {{ options|raw }}
+</select>

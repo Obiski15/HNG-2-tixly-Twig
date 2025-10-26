@@ -1,0 +1,13 @@
+{% extends "layouts/base.twig" %}
+
+{% block content %}
+<div class="flex min-h-screen flex-col">
+    <main class="flex-1">
+        {% block main %}{% endblock %}
+    </main>
+    
+    {% if showFooter|default(true) %}
+    {% include "components/footer.twig" %}
+    {% endif %}
+</div>
+{% endblock %}

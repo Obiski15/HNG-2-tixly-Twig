@@ -1,0 +1,38 @@
+{# Dialog Component #}
+{% set id = id|default('dialog') %}
+{% set title = title|default('') %}
+{% set description = description|default('') %}
+
+<div id="{{ id }}" class="hidden fixed inset-0 z-50">
+    {# Overlay #}
+    <div data-dialog-overlay class="fixed inset-0 bg-background/80 backdrop-blur-sm"></div>
+    
+    {# Content #}
+    <div class="fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-card p-6 shadow-lg duration-200 sm:rounded-lg">
+        {# Header #}
+        <div class="flex flex-col space-y-1.5 text-center sm:text-left">
+            {% if title %}
+            <h2 class="text-lg font-semibold leading-none tracking-tight">
+                {{ title }}
+            </h2>
+            {% endif %}
+            {% if description %}
+            <p class="text-sm text-muted-foreground">
+                {{ description }}
+            </p>
+            {% endif %}
+        </div>
+        
+        {# Body #}
+        <div class="py-4">
+            {{ content|raw }}
+        </div>
+        
+        {# Footer #}
+        {% if footer %}
+        <div class="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
+            {{ footer|raw }}
+        </div>
+        {% endif %}
+    </div>
+</div>

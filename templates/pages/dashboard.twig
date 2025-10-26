@@ -1,0 +1,160 @@
+{% extends "layouts/layout.twig" %}
+
+{% block title %}Dashboard - Tixly{% endblock %}
+
+{% set showFooter = false %}
+
+{% block main %}
+{# Loading state - shown until auth check completes #}
+<div id="auth-loading" class="flex min-h-screen items-center justify-center">
+    <div class="text-center">
+        <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+        <p class="text-muted-foreground mt-4 text-sm">Loading...</p>
+    </div>
+</div>
+
+<div id="dashboard-content" class="bg-muted/30 min-h-screen" style="display: none;">
+    {# Header #}
+    {% include 'components/dashboard/header.twig' %}
+
+    <div class="container-app py-8">
+        {# Stats Cards #}
+        <div class="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
+            {# Total Tickets #}
+            <div class="bg-card border-border rounded-lg border shadow-md">
+                <div class="p-6">
+                    <div class="flex flex-row items-center justify-between pb-2">
+                        <h3 class="text-sm font-medium">Total Tickets</h3>
+                        {% include 'components/icons/ticket.twig' with { size: 16, class: 'text-muted-foreground' } %}
+                    </div>
+                    <div class="mt-2">
+                        <div class="text-3xl font-bold" id="total-tickets">0</div>
+                        <p class="text-muted-foreground mt-1 text-xs">All time</p>
+                    </div>
+                </div>
+            </div>
+
+            {# Open Tickets #}
+            <div class="bg-card border-border rounded-lg border shadow-md">
+                <div class="p-6">
+                    <div class="flex flex-row items-center justify-between pb-2">
+                        <h3 class="text-sm font-medium">Open Tickets</h3>
+                        {% include 'components/icons/check-circle-2.twig' with { size: 16, class: 'text-success' } %}
+                    </div>
+                    <div class="mt-2">
+                        <div class="text-success text-3xl font-bold" id="open-tickets">0</div>
+                        <p class="text-muted-foreground mt-1 text-xs">Awaiting action</p>
+                    </div>
+                </div>
+            </div>
+
+            {# In Progress #}
+            <div class="bg-card border-border rounded-lg border shadow-md">
+                <div class="p-6">
+                    <div class="flex flex-row items-center justify-between pb-2">
+                        <h3 class="text-sm font-medium">In Progress</h3>
+                        {% include 'components/icons/clock.twig' with { size: 16, class: 'text-warning' } %}
+                    </div>
+                    <div class="mt-2">
+                        <div class="text-warning text-3xl font-bold" id="in-progress-tickets">0</div>
+                        <p class="text-muted-foreground mt-1 text-xs">Being worked on</p>
+                    </div>
+                </div>
+            </div>
+
+            {# Closed Tickets #}
+            <div class="bg-card border-border rounded-lg border shadow-md">
+                <div class="p-6">
+                    <div class="flex flex-row items-center justify-between pb-2">
+                        <h3 class="text-sm font-medium">Closed Tickets</h3>
+                        {% include 'components/icons/x-circle.twig' with { size: 16, class: 'text-muted-foreground' } %}
+                    </div>
+                    <div class="mt-2">
+                        <div class="text-muted-foreground text-3xl font-bold" id="closed-tickets">0</div>
+                        <p class="text-muted-foreground mt-1 text-xs">Resolved</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {# Quick Actions Card #}
+        <div class="bg-card border-border rounded-lg border shadow-md">
+            <div class="p-6">
+                <h2 class="text-xl font-semibold mb-2">Quick Actions</h2>
+                <p class="text-muted-foreground text-sm mb-4">Manage your tickets efficiently</p>
+            </div>
+            <div class="p-6 pt-0">
+                <div class="flex flex-col gap-4 sm:flex-row">
+                    <a href="/tickets" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-4 py-2 text-sm font-medium hover:bg-primary/90 transition-colors flex-1">
+                        {% include 'components/icons/ticket.twig' with { size: 16, class: 'mr-2' } %}
+                        View All Tickets
+                    </a>
+                    <button onclick="openCreateDialog()" class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors flex-1">
+                        Create New Ticket
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# Create Ticket Dialog #}
+{% include 'components/ui/dialog.twig' with {
+    'id': 'create-ticket-dialog',
+    'title': 'Create New Ticket',
+    'description': 'Fill in the details to create a new ticket',
+    'content': '
+        <form id="create-ticket-form" class="space-y-4">
+            <div class="space-y-2">
+                <div>
+                    <label for="title" class="text-sm font-medium">Title</label>
+                </div>
+                <input type="text" id="title" name="title" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter ticket title" required />
+                <span class="text-sm text-destructive" id="title-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="description" class="text-sm font-medium">Description</label>
+                </div>
+                <textarea id="description" name="description" rows="4" class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" placeholder="Enter ticket description" required></textarea>
+                <span class="text-sm text-destructive" id="description-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="priority" class="text-sm font-medium">Priority</label>
+                </div>
+                <select id="priority" name="priority" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" required>
+                    <option value="">Select priority</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+                <span class="text-sm text-destructive" id="priority-error"></span>
+            </div>
+            
+            <div class="space-y-2">
+                <div>
+                    <label for="status" class="text-sm font-medium">Status</label>
+                </div>
+                <select id="status" name="status" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" required>
+                    <option value="">Select status</option>
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="closed">Closed</option>
+                </select>
+                <span class="text-sm text-destructive" id="status-error"></span>
+            </div>
+        </form>
+    ',
+    'footer': '
+        <button data-dialog-close type="button" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">Cancel</button>
+        <button type="submit" form="create-ticket-form" class="inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">Create Ticket</button>
+    '
+} %}
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="/dist/js/pages/dashboard.js"></script>
+{% endblock %}

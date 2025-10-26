@@ -1,0 +1,111 @@
+{% extends "layouts/layout.twig" %}
+
+{% block title %}Sign Up - Tixly{% endblock %}
+
+{% set showFooter = false %}
+
+{% block main %}
+<div class="wave-bg flex min-h-screen items-center justify-center px-4 py-12">
+    <div class="bg-card border-border w-full max-w-md rounded-lg border shadow-xl">
+        {# Card Header #}
+        <div class="p-6 space-y-1">
+            <div class="mb-2 flex items-center gap-2">
+                {% include 'components/icons/user-plus.twig' with { size: 24, class: 'text-primary' } %}
+                <h1 class="text-2xl font-semibold">Create Account</h1>
+            </div>
+            <p class="text-muted-foreground text-sm">
+                Sign up to start managing your tickets
+            </p>
+        </div>
+
+        {# Card Content #}
+        <div class="p-6 pt-0">
+            <form id="signup-form" class="space-y-4">
+                <div class="space-y-2">
+                    <div>
+                        {% include 'components/ui/label.twig' with {
+                            'for': 'name',
+                            'content': 'Name'
+                        } %}
+                    </div>
+                    {% include 'components/ui/input.twig' with {
+                        'type': 'text',
+                        'id': 'name',
+                        'name': 'name',
+                        'placeholder': 'John Doe',
+                        'required': true
+                    } %}
+                    <span class="text-sm text-destructive" id="name-error"></span>
+                </div>
+                
+                <div class="space-y-2">
+                    <div>
+                        {% include 'components/ui/label.twig' with {
+                            'for': 'signup-email',
+                            'content': 'Email'
+                        } %}
+                    </div>
+                    {% include 'components/ui/input.twig' with {
+                        'type': 'email',
+                        'id': 'signup-email',
+                        'name': 'email',
+                        'placeholder': 'you@example.com',
+                        'required': true
+                    } %}
+                    <span class="text-sm text-destructive" id="email-error"></span>
+                </div>
+                
+                <div class="space-y-2">
+                    <div>
+                        {% include 'components/ui/label.twig' with {
+                            'for': 'signup-password',
+                            'content': 'Password'
+                        } %}
+                    </div>
+                    {% include 'components/ui/input.twig' with {
+                        'type': 'password',
+                        'id': 'signup-password',
+                        'name': 'password',
+                        'placeholder': '••••••••',
+                        'required': true
+                    } %}
+                    <span class="text-sm text-destructive" id="password-error"></span>
+                </div>
+                
+                <div class="space-y-2">
+                    <div>
+                        {% include 'components/ui/label.twig' with {
+                            'for': 'confirm-password',
+                            'content': 'Confirm Password'
+                        } %}
+                    </div>
+                    {% include 'components/ui/input.twig' with {
+                        'type': 'password',
+                        'id': 'confirm-password',
+                        'name': 'confirmPassword',
+                        'placeholder': '••••••••',
+                        'required': true
+                    } %}
+                    <span class="text-sm text-destructive" id="confirmPassword-error"></span>
+                </div>
+                
+                {% include 'components/ui/button.twig' with {
+                    'type': 'submit',
+                    'content': 'Sign Up',
+                    'class': 'w-full',
+                    'attributes': 'id="signup-button"'
+                } %}
+            </form>
+            
+            <div class="mt-4 text-center text-sm">
+                <span class="text-muted-foreground">Already have an account?</span>
+                <a href="/login" class="text-primary hover:underline ml-1">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module" src="/dist/js/pages/signup.js"></script>
+{% endblock %}
