@@ -10,11 +10,6 @@
 </head>
 <body>
     {% block content %}{% endblock %}
-    
-    {# Inject API base URL from server-side env into the page so client JS can use it #}
-    <script>
-        window.API_BASE_URL = "{{ API_BASE_URL|e('js') }}";
-    </script>
 
     <script type="module" src="/dist/js/main.js"></script>
     {% block scripts %}{% endblock %}

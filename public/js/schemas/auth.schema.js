@@ -39,8 +39,9 @@ const AuthSchemas = {
       required: true,
       requiredMessage: "Please confirm your password",
       custom: (value) => {
-        const password = document.getElementById("password")?.value;
-        if (value !== password) {
+        const pwdInput = document.querySelector('input[name="password"]');
+        const password = pwdInput ? pwdInput.value : null;
+        if (password === null || value !== password) {
           return "Passwords do not match";
         }
         return null;

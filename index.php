@@ -29,8 +29,9 @@ if ($_ENV['TWIG_DEBUG'] === 'true') {
     $twig->addExtension(new \Twig\Extension\DebugExtension());
 }
 
-// Inject important environment values into Twig globals so front-end can read them
-$twig->addGlobal('API_BASE_URL', isset($_ENV['API_BASE_URL']) ? trim($_ENV['API_BASE_URL'], ' "') : 'http://localhost:4000');
+// Client API base URL is now provided by Vite at build time via VITE_API_BASE_URL
+// If you require a server-side URL for templates, set and expose a separate
+// SERVER_API_BASE_URL env var here instead.
 
 // Simple router
 $request = $_SERVER['REQUEST_URI'];
@@ -55,11 +56,11 @@ try {
             break;
         
         case '/login':
-            echo $twig->render('pages/login.twig');
+            echo $twig->render('pages/login.twig', ['showFooter' => false]);
             break;
         
         case '/signup':
-            echo $twig->render('pages/signup.twig');
+            echo $twig->render('pages/signup.twig', ['showFooter' => false]);
             break;
         
         case '/dashboard':

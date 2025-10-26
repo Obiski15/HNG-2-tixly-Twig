@@ -49,7 +49,7 @@ cp .env.example .env
 Edit `.env` with your settings:
 
 ```env
-API_BASE_URL=http://localhost:4000
+VITE_API_BASE_URL=http://localhost:4000
 TWIG_DEBUG=true
 TWIG_CACHE=false
 ```

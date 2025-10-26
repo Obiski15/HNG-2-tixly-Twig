@@ -1,8 +1,7 @@
+{% set showFooter = false %}
 {% extends "layouts/layout.twig" %}
 
 {% block title %}Login - Tixly{% endblock %}
-
-{% set showFooter = false %}
 
 {% block main %}
 <div class="wave-bg flex min-h-screen items-center justify-center px-4 py-12">
@@ -75,3 +74,5 @@
 {% block scripts %}
 <script type="module" src="/dist/js/pages/login.js"></script>
 {% endblock %}
+
+{% block footer %}{% endblock %}
