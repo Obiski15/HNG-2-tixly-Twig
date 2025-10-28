@@ -18,7 +18,7 @@ Modern ticket management made simple and efficient. Built with PHP Twig template
 - Composer installed
 - Node.js 18+ installed
 - pnpm, npm, or yarn package manager
-- Backend server running (see `../server/README.md`)
+- [server/README.md on GitHub](https://github.com/Obiski15/HNG-2-tixly-Backend-Server/blob/main/README.md)
 
 ### Installation
 
